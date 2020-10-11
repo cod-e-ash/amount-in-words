@@ -1,7 +1,7 @@
 export enum CountryCodes {
   IND = "IND",
   USA = "USA",
-  GBR = "GBR",
+  GBR = "GBR"
 }
 
 export class AmountToWords {
@@ -56,6 +56,33 @@ export class AmountToWords {
     GBR: ["Pound", "Pence", "Pence", "£", "usNumSys"],
   };
 
+  public toWords = (amount: string | number, countryCode: string = "IND") => {
+    // console.log(num);
+    const numSys = this.numSys[this.getNumSys(countryCode)];
+    const nStr = amount.toString().split(".");
+    // Remove any other characters than numbers
+    const wholeStr = Number(nStr[0].replace(/[^a-z\d\s]+/gi, ""));
+    const decimalStr = nStr.length > 1 ? Number(nStr[1]) : 0;
+    const wholeStrPart =
+      this.getNumSys(countryCode) === "inNumSys"
+        ? this.convert(wholeStr, numSys).trim()
+        : this.convertInUS(wholeStr, numSys).trim();
+    const decimalPart = this.convert(decimalStr, numSys).trim();
+    let valueInStr =
+      wholeStrPart.length > 0
+        ? `${wholeStrPart} ${this.getCurrencyWhole(countryCode, wholeStr)}`
+        : `Zero ${this.getCurrencyWhole(countryCode, wholeStr)}`;
+    valueInStr =
+      decimalPart.length > 0
+        ? `${valueInStr} And ${decimalPart} ${this.getCurrencyChange(
+            countryCode,
+            decimalStr
+          )}`
+        : valueInStr;
+    // console.log(valueInStr);
+    return valueInStr;
+  };
+
   private getCurrencyWhole = (
     countryCode: string = "IND",
     amount: number = 0
@@ -88,33 +115,6 @@ export class AmountToWords {
     return this.curCodes[countryCode]
       ? this.curCodes[countryCode][4]
       : this.curCodes["IND"][4];
-  };
-
-  public convertInWord = (num: any, countryCode: string = "IND") => {
-    // console.log(num);
-    const numSys = this.numSys[this.getNumSys(countryCode)];
-    const nStr = num.toString().split(".");
-    // Remove any other characters than numbers
-    const wholeStr = Number(nStr[0].replace(/[^a-z\d\s]+/gi, ""));
-    const decimalStr = nStr.length > 1 ? Number(nStr[1]) : 0;
-    const wholeStrPart =
-      this.getNumSys(countryCode) === "inNumSys"
-        ? this.convert(wholeStr, numSys).trim()
-        : this.convertInUS(wholeStr, numSys).trim();
-    const decimalPart = this.convert(decimalStr, numSys).trim();
-    let valueInStr =
-      wholeStrPart.length > 0
-        ? `${wholeStrPart} ${this.getCurrencyWhole(countryCode, wholeStr)}`
-        : `Zero ${this.getCurrencyWhole(countryCode, wholeStr)}`;
-    valueInStr =
-      decimalPart.length > 0
-        ? `${valueInStr} And ${decimalPart} ${this.getCurrencyChange(
-            countryCode,
-            decimalStr
-          )}`
-        : valueInStr;
-    // console.log(valueInStr);
-    return valueInStr;
   };
 
   private convert = (num: number | string, numSys: string[]) => {
