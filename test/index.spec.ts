@@ -53,3 +53,13 @@ test('Comma2', () => {
 test('Comma3', () => {
     expect(atw.toWords('10,000,000,000', CountryCodes.GBR)).toEqual('Ten Billion Pounds');
 });
+
+test('supports ngr country code', () => {
+    expect(atw.toWords(1000, CountryCodes.NGR)).toEqual('One Thousand Naira');
+    expect(atw.toWords('001.55', CountryCodes.NGR)).toEqual('One Naira And Fifty Five Kobo');
+    expect(atw.toWords('0.01', CountryCodes.NGR)).toEqual('Zero Naira And One Kobo');
+    expect(atw.toWords('001.87', CountryCodes.NGR)).toEqual('One Naira And Eighty Seven Kobo');
+    expect(atw.toWords('632,362,999,101,001', CountryCodes.NGR)).toEqual('Six Hundred Thirty Two Trillion Three Hundred Sixty Two Billion Nine Hundred Ninety Nine Million One Hundred One Thousand One Naira');
+    expect(atw.toWords(554272561010, CountryCodes.NGR)).toEqual('Five Hundred Fifty Four Billion Two Hundred Seventy Two Million Five Hundred Sixty One Thousand Ten Naira');
+
+})
