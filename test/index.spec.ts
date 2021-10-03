@@ -46,11 +46,11 @@ test('Comma', () => {
     expect(atw.toWords('100,000', CountryCodes.GBR)).toEqual('One Hundred Thousand Pounds');
 });
 
-test('Comma2', () => {
+test('Hundred Million', () => {
     expect(atw.toWords('100,000,000', CountryCodes.GBR)).toEqual('One Hundred Million Pounds');
 });
 
-test('Comma3', () => {
+test('Ten Billion', () => {
     expect(atw.toWords('10,000,000,000', CountryCodes.GBR)).toEqual('Ten Billion Pounds');
 });
 
