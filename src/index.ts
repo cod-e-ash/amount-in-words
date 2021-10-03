@@ -138,13 +138,24 @@ export class AmountToWords {
       // console.log(numSys.length);
       for (let i = 0, l = numSys.length * 2 - 1; i < l; ++i) {
         // console.log(numStr, i, (i/2)+1);
+        let strValue = '';
+        let curNum = [];
         if (i === 0)
-          finalStr.unshift(this.getUnits(numStr.splice(-2), numSys, 0));
-        else if (i % 2 === 1)
-          finalStr.unshift(this.getUnits(numStr.splice(-1), numSys, 1));
-        else {
-          finalStr.unshift(this.getUnits(numStr.splice(-2), numSys, i / 2 + 1));
+        {
+          curNum = numStr.splice(-2);
+          strValue = this.getUnits(curNum, numSys, 0);
         }
+        else if (i % 2 === 1)
+        {
+          curNum = numStr.splice(-1);
+          strValue = this.getUnits(curNum, numSys, 1);
+        }
+        else 
+        {
+          curNum = numStr.splice(-2);
+          strValue = this.getUnits(curNum, numSys, i / 2 + 1);
+        }
+        if(Number(curNum.join('')) !== 0 || numStr.length < 2) finalStr.unshift(strValue);
       }
       if (numStr.length > 0) finalStr.unshift(...numSys.slice(-1));
       else break;
@@ -166,7 +177,7 @@ export class AmountToWords {
         lastTwo.slice(-1),
         numSys
       )}`;
-    if (numInStr && place) numInStr = `${numInStr}${numSys[place] ?? ""}`;
+    if ((numInStr && place) || (place && place >= 2)) numInStr = `${numInStr}${numSys[place] ?? ""}`;
     return numInStr;
   };
 }
